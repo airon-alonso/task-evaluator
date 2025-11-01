@@ -248,23 +248,74 @@
   color: #888;
 }
 
-.btn-delete {
+/* Task Actions Container */
+.task-actions {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+/* Task Edit Input */
+.task-edit-input {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: #333;
+  border: 2px solid #646cff;
+  border-radius: 6px;
+  outline: none;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+
+.task-edit-input:focus {
+  border-color: #535bf2;
+}
+
+/* Button Styles */
+.btn-delete,
+.btn-edit,
+.btn-save,
+.btn-cancel {
   background: none;
   border: none;
   font-size: 1.3rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
-  transition: transform 0.1s;
+  transition: transform 0.1s, opacity 0.1s;
   opacity: 0.6;
 }
 
-.btn-delete:hover {
+.btn-delete:hover,
+.btn-edit:hover,
+.btn-save:hover,
+.btn-cancel:hover {
   opacity: 1;
   transform: scale(1.1);
 }
 
-.btn-delete:active {
+.btn-delete:active,
+.btn-edit:active,
+.btn-save:active,
+.btn-cancel:active {
   transform: scale(0.95);
+}
+
+/* Specific Button Colors */
+.btn-edit {
+  font-size: 1.2rem;
+}
+
+.btn-save {
+  color: #28a745;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.btn-cancel {
+  color: #dc3545;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 /* Task Count */

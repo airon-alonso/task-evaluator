@@ -7,6 +7,8 @@ function Tasks() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editedTitle, setEditedTitle] = useState('');
 
   // Fetch tasks on component mount
   useEffect(() => {
@@ -98,6 +100,44 @@ function Tasks() {
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
+  // Start editing a task
+  const handleEditTask = (task) => {
+    setEditingTaskId(task.id);
+    setEditedTitle(task.title);
+    setError(null);
+  };
+
+  // Save edited task
+  const handleSaveEdit = async (task) => {
+    if (!editedTitle.trim()) {
+      setError('Task title cannot be empty');
+      return;
+    }
+
+    try {
+      setError(null);
+      const response = await api.put(`/tasks/${task.id}`, {
+        title: editedTitle.trim(),
+        isDone: task.isDone
+      });
+
+      setTasks(tasks.map(t => t.id === task.id ? response.data : t));
+      setEditingTaskId(null);
+      setEditedTitle('');
+      showSuccessMessage('Task updated successfully!');
+    } catch (err) {
+      setError('Failed to update task. Please try again.');
+      console.error('Error updating task:', err);
+    }
+  };
+
+  // Cancel editing
+  const handleCancelEdit = () => {
+    setEditingTaskId(null);
+    setEditedTitle('');
+    setError(null);
+  };
+
   // Loading state
   if (loading) {
     return (
@@ -159,17 +199,68 @@ function Tasks() {
                 >
                   {task.isDone ? '✅' : '⬜'}
                 </span>
-                <span className="task-title">
-                  {task.title}
-                </span>
+
+                {editingTaskId === task.id ? (
+                  // Edit mode: show input field
+                  <input
+                    type="text"
+                    value={editedTitle}
+                    onChange={(e) => setEditedTitle(e.target.value)}
+                    className="task-edit-input"
+                    maxLength="200"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSaveEdit(task);
+                      if (e.key === 'Escape') handleCancelEdit();
+                    }}
+                  />
+                ) : (
+                  // View mode: show task title
+                  <span className="task-title">
+                    {task.title}
+                  </span>
+                )}
               </div>
-              <button
-                onClick={() => handleDeleteTask(task.id)}
-                className="btn-delete"
-                title="Delete task"
-              >
-                🗑️
-              </button>
+
+              <div className="task-actions">
+                {editingTaskId === task.id ? (
+                  // Edit mode: show save and cancel buttons
+                  <>
+                    <button
+                      onClick={() => handleSaveEdit(task)}
+                      className="btn-save"
+                      title="Save changes"
+                    >
+                      ✓
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="btn-cancel"
+                      title="Cancel editing"
+                    >
+                      ✕
+                    </button>
+                  </>
+                ) : (
+                  // View mode: show edit and delete buttons
+                  <>
+                    <button
+                      onClick={() => handleEditTask(task)}
+                      className="btn-edit"
+                      title="Edit task"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      onClick={() => handleDeleteTask(task.id)}
+                      className="btn-delete"
+                      title="Delete task"
+                    >
+                      🗑️
+                    </button>
+                  </>
+                )}
+              </div>
             </li>
           ))}
         </ul>

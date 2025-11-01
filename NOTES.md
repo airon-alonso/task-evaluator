@@ -87,14 +87,24 @@
 - **Features Implemented:**
   - **Create Task** (lines 32-54): Form with input validation and API integration
   - **Read Tasks** (lines 17-28): Fetches and displays all tasks on component mount
-  - **Update Task** (lines 57-71): Click checkbox to toggle isDone status
-  - **Delete Task** (lines 74-88): Delete button with confirmation dialog
-  - **Task Count** (lines 174-178): Shows total and completed task counts
+  - **Update Task - Toggle Status** (lines 62-76): Click checkbox to toggle isDone status
+  - **Update Task - Inline Edit** (lines 103-139): Edit task title directly in the list
+  - **Delete Task** (lines 79-94): Delete button with confirmation dialog
+  - **Task Count** (lines 270-274): Shows total and completed task counts
+- **Inline Editing Features:**
+  - Click edit button (✏️) to enter edit mode
+  - Input field appears with current title
+  - Save (✓) or Cancel (✕) buttons
+  - Keyboard shortcuts: Enter to save, Escape to cancel
+  - Auto-focus on input field
+  - Validation prevents empty titles
+  - Success message on update
 - **State Management:**
-  - Loading state (lines 7, 97-104)
-  - Error state with user-friendly messages (lines 8, 111-116)
-  - Success messages with auto-dismiss (lines 9, 119-123)
-  - Form state for new task input
+  - Loading state (lines 7)
+  - Error state with user-friendly messages (lines 8)
+  - Success messages with auto-dismiss (lines 9)
+  - Form state for new task input (line 6)
+  - Edit mode state (lines 10-11: editingTaskId, editedTitle)
 - Resolves SYSTEM_REVIEW.md Issue #8 (Incomplete Frontend Functionality)
 
 ### 10. Error Handling & User Experience
@@ -272,7 +282,29 @@
    - ✅ Success message "Task marked as done!" appears
    - Click again to mark as undone - reverses changes
 
-3. **Test Delete Task:**
+3. **Test Inline Edit Task:**
+   - Click the edit button (✏️) next to a task
+   - ✅ Input field appears with current task title
+   - ✅ Edit and delete buttons replaced with save (✓) and cancel (✕)
+   - ✅ Input field is auto-focused
+   - Modify the task title (e.g., change "Buy milk" to "Buy almond milk")
+   - Click the save button (✓) or press Enter
+   - ✅ Task title updates immediately
+   - ✅ Success message "Task updated successfully!" appears
+   - ✅ Edit mode exits, buttons return to normal
+   - **Test Cancel:**
+     - Click edit (✏️) again
+     - Change the title
+     - Click cancel (✕) or press Escape
+     - ✅ Changes are discarded
+     - ✅ Original title remains
+   - **Test Empty Title:**
+     - Click edit (✏️)
+     - Delete all text (empty title)
+     - Try to save
+     - ✅ Error message "Task title cannot be empty" appears
+
+4. **Test Delete Task:**
    - Click the delete button (🗑️) next to a task
    - ✅ Confirmation dialog appears
    - Click "OK" to confirm
@@ -513,12 +545,14 @@ This implementation successfully resolved **5 critical blockers + 4 major issues
 - ✅ Task creation form with validation
 - ✅ Task list display with real-time updates
 - ✅ Toggle task completion (click checkbox)
+- ✅ Inline task editing (edit title directly in list)
 - ✅ Delete tasks with confirmation
 - ✅ Loading indicators
 - ✅ Error and success messages
 - ✅ Empty state handling
 - ✅ Task counter (total/completed)
 - ✅ Professional UI with animations
+- ✅ Keyboard shortcuts (Enter to save, Escape to cancel)
 
 **Integration:**
 - ✅ CORS configured
